@@ -4,19 +4,23 @@ from os import environ
 from logging import error as logerror
 
 BASE_URL = environ.get('BASE_URL', None)
-try:
-    if len(BASE_URL) == 0:
-        raise TypeError
-    BASE_URL = BASE_URL.rstrip("/")
-except TypeError:
-    BASE_URL = None
 PORT = environ.get('PORT', None)
-if PORT is not None and BASE_URL is not None:
+DYNO = environ.get('DYNO', None)
+
+if BASE_URL is None or len(BASE_URL) == 0:
+    BASE_URL = None
+else:
+    BASE_URL = BASE_URL.rstrip("/")
+
+if DYNO is not None and BASE_URL is not None:
     while True:
         try:
-            rget(BASE_URL).status_code
-            sleep(600)
+            response = rget(BASE_URL, timeout=10)
+            if response.status_code == 200:
+                sleep(600)
+            else:
+                sleep(30)
         except Exception as e:
-            logerror(f"alive.py: {e}")
-            sleep(2)
+            logerror(f"Keep-alive error: {e}")
+            sleep(60)
             continue
