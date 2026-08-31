@@ -29,10 +29,10 @@ on:
         description: "Database URL from MongoDB"
         required: true
       TELEGRAM_API:
-        description: "Telegram API ID from https://telegram.org"
+        description: "Telegram API ID"
         required: true
       TELEGRAM_HASH:
-        description: "Telegram HASH from https://telegram.org"
+        description: "Telegram HASH"
         required: true
       UPSTREAM_REPO:
         description: "Upstream Repo Link"
@@ -50,21 +50,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set Stack Version
-        run: |
-          echo "STACK_VERSION=${{ inputs.HEROKU_STACK }}" >> $GITHUB_ENV
-
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
+          echo "$HOME/.local/share/heroku/bin" >> $GITHUB_PATH
 
-      - name: Deploy Repo to Heroku
+      - name: Heroku Login
+        run: |
+          echo "${{ inputs.HEROKU_API_KEY }}" | heroku auth:login --interactive
+        env:
+          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
+
+      - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{ inputs.HEROKU_API_KEY }}
           heroku_app_name: ${{ inputs.HEROKU_APP_NAME }}
           heroku_email: ${{ inputs.HEROKU_EMAIL }}
-          team: ${{ inputs.HEROKU_TEAM_NAME != '' && format('{0}', inputs.HEROKU_TEAM_NAME) || '' }}
+          team: ${{ inputs.HEROKU_TEAM_NAME }}
           usedocker: true
           docker_heroku_process_type: web
           stack: "container"
