@@ -1,3 +1,4 @@
+# Force new build - 2026
 ARG STACK_VERSION=24
 FROM heroku/heroku:${STACK_VERSION}-build
 
