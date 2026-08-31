@@ -1,21 +1,82 @@
-config.env
+# Python
 *.pyc
-data*
-.vscode
-.idea
-*.json
-*.pickle
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Environment
+config.env
+.env
+*.env
+*.env.*
 .netrc
+
+# Database
+*.db
+*.sqlite3
+*.pickle
 log.txt
-accounts/*
-Thumbnails/*
-MediaInfo/*
-Images/*
-rclone/*
-list_drives.txt
+rlog.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Bot specific
+data*
+accounts/
+Thumbnails/
+MediaInfo/
+Images/
+rclone/
+downloads/
 cookies.txt
-downloads
 bot.session
 user.session
 terabox.txt
 rclone.conf
+list_drives.txt
+
+# Git
+.git/
+.gitignore
+*.gitattributes
+
+# Heroku
+.heroku/
+.heroku.yml
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
