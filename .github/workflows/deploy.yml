@@ -53,13 +53,6 @@ jobs:
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-          echo "$HOME/.local/share/heroku/bin" >> $GITHUB_PATH
-
-      - name: Heroku Login
-        run: |
-          echo "${{ inputs.HEROKU_API_KEY }}" | heroku auth:login --interactive
-        env:
-          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
