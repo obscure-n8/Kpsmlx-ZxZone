@@ -1,6 +1,9 @@
 ARG STACK_VERSION=24
 FROM heroku/heroku:${STACK_VERSION}-build
 
+USER root
+RUN mkdir -p /var/lib/apt/lists/partial
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.11 \
     python3-pip \
