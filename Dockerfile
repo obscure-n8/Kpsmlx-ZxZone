@@ -33,5 +33,5 @@ RUN chown -R heroku:heroku /app || true
 
 # Add build timestamp to force new build
 RUN echo "Build timestamp: $(date)" >> /app/build_info.txt
-
+RUN echo "Force rebuild: $(date)" >> /app/rebuild.txt
 CMD ["bash", "start.sh"]
