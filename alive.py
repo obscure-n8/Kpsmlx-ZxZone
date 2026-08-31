@@ -3,14 +3,14 @@ from requests import get as rget
 from os import environ
 from logging import error as logerror
 
-BASE_URL = environ.get('BASE_URL', None)
 PORT = environ.get('PORT', None)
 DYNO = environ.get('DYNO', None)
+HEROKU_APP_NAME = environ.get('HEROKU_APP_NAME', None)
 
-if BASE_URL is None or len(BASE_URL) == 0:
-    BASE_URL = None
-else:
-    BASE_URL = BASE_URL.rstrip("/")
+BASE_URL = None
+
+if DYNO is not None and HEROKU_APP_NAME is not None:
+    BASE_URL = f"https://{HEROKU_APP_NAME}.herokuapp.com"
 
 if DYNO is not None and BASE_URL is not None:
     while True:
