@@ -1,4 +1,8 @@
-FROM nanthakps/kpsmlx
+FROM python:3.11-slim-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl git ffmpeg mediainfo \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 RUN chmod 777 /usr/src/app
@@ -11,4 +15,4 @@ RUN uv pip install --system --no-cache -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT ["bash", "start.sh"]
+CMD ["bash", "start.sh"]
