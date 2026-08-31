@@ -71,8 +71,7 @@ Contributor	Role
 anasty17	Original Creator
 Tamilupdates	KPSML Mod
 SilentDemonSD	WZML Mod
-AKJN	Merged & Enhanced
-obscure-n8	Repository Maintainer
+obscure-n8	Merged, Enhanced & Maintained
 ⚠️ Disclaimer
 text
 This bot is for educational purposes only.
