@@ -1,18 +1,31 @@
-FROM python:3.11-slim-bookworm
+ARG STACK_VERSION=24
+FROM heroku/heroku:${STACK_VERSION}-build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl git ffmpeg mediainfo \
+    python3.11 \
+    python3-pip \
+    python3-venv \
+    curl \
+    git \
+    ffmpeg \
+    mediainfo \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
-RUN chmod 777 /usr/src/app
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python && \
+    ln -sf /usr/bin/pip3 /usr/bin/pip
 
-RUN pip3 install --no-cache-dir --upgrade setuptools pip uv
-RUN uv pip install --system --no-cache pymediainfo pyaes
+WORKDIR /app
+RUN chmod 777 /app
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 COPY requirements.txt .
-RUN uv pip install --system --no-cache -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+USER root
+RUN chown -R heroku:heroku /app
+USER heroku
 
 CMD ["bash", "start.sh"]
