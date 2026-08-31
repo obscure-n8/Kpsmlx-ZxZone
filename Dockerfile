@@ -24,8 +24,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-USER root
-RUN chown -R heroku:heroku /app
-USER heroku
+RUN chown -R heroku:heroku /app || true
 
 CMD ["bash", "start.sh"]
