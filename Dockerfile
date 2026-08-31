@@ -1,7 +1,8 @@
-# Force new build - 2026
+# Force new build - ZxZone-Master-MLTB
 ARG STACK_VERSION=24
 FROM heroku/heroku:${STACK_VERSION}-build
 
+# Fix permission issue for Heroku
 USER root
 RUN mkdir -p /var/lib/apt/lists/partial
 
@@ -29,5 +30,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN chown -R heroku:heroku /app || true
+
+# Add build timestamp to force new build
+RUN echo "Build timestamp: $(date)" >> /app/build_info.txt
 
 CMD ["bash", "start.sh"]
