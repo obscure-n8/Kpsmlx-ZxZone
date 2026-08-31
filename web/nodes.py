@@ -1,12 +1,17 @@
 from anytree import NodeMixin
 from re import findall as re_findall
 from os import environ
+import os
 
 DOWNLOAD_DIR = environ.get('DOWNLOAD_DIR', '')
 if len(DOWNLOAD_DIR) == 0:
     DOWNLOAD_DIR = '/usr/src/app/downloads/'
 elif not DOWNLOAD_DIR.endswith("/"):
     DOWNLOAD_DIR += '/'
+
+# Heroku support for dynamic paths
+if environ.get('DYNO'):
+    DOWNLOAD_DIR = '/app/downloads/'
 
 
 class TorNode(NodeMixin):
@@ -31,9 +36,11 @@ class TorNode(NodeMixin):
 def qb_get_folders(path):
     return path.split("/")
 
+
 def get_folders(path):
     fs = re_findall(f'{DOWNLOAD_DIR}[0-9]+/(.+)', path)[0]
     return fs.split('/')
+
 
 def make_tree(res, aria2=False):
     parent = TorNode("Torrent")
@@ -48,10 +55,10 @@ def make_tree(res, aria2=False):
                         previous_node = TorNode(folders[j], parent=previous_node, is_folder=True)
                     else:
                         previous_node = current_node
-                TorNode(folders[-1], is_file=True, parent=previous_node, size=i.size, priority=i.priority, \
+                TorNode(folders[-1], is_file=True, parent=previous_node, size=i.size, priority=i.priority,
                         file_id=i.id, progress=round(i.progress*100, 5))
             else:
-                TorNode(folders[-1], is_file=True, parent=parent, size=i.size, priority=i.priority, \
+                TorNode(folders[-1], is_file=True, parent=parent, size=i.size, priority=i.priority,
                         file_id=i.id, progress=round(i.progress*100, 5))
     else:
         for i in res:
@@ -67,19 +74,13 @@ def make_tree(res, aria2=False):
                         previous_node = TorNode(folders[j], parent=previous_node, is_folder=True)
                     else:
                         previous_node = current_node
-                TorNode(folders[-1], is_file=True, parent=previous_node, size=i['length'], priority=priority, \
+                TorNode(folders[-1], is_file=True, parent=previous_node, size=i['length'], priority=priority,
                         file_id=i['index'], progress=round((int(i['completedLength'])/int(i['length']))*100, 5))
             else:
-                TorNode(folders[-1], is_file=True, parent=parent, size=i['length'], priority=priority, \
+                TorNode(folders[-1], is_file=True, parent=parent, size=i['length'], priority=priority,
                         file_id=i['index'], progress=round((int(i['completedLength'])/int(i['length']))*100, 5))
     return create_list(parent, ["", 0])
 
-"""
-def print_tree(parent):
-    for pre, _, node in RenderTree(parent):
-        treestr = u"%s%s" % (pre, node.name)
-        print(treestr.ljust(8), node.is_folder, node.is_file)
-"""
 
 def create_list(par, msg):
     if par.name != ".unwanted":
