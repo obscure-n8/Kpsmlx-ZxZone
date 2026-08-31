@@ -5,6 +5,7 @@ from pkg_resources import working_set
 from requests import get as rget
 from dotenv import load_dotenv, dotenv_values
 from pymongo import MongoClient
+import sys
 
 if ospath.exists('log.txt'):
     with open('log.txt', 'r+') as f:
@@ -68,36 +69,49 @@ if DATABASE_URL is not None:
         environ['UPGRADE_PACKAGES'] = config_dict.get('UPDATE_PACKAGES', 'False')
     conn.close()
 
-UPGRADE_PACKAGES = environ.get('UPGRADE_PACKAGES', 'False') 
+UPGRADE_PACKAGES = environ.get('UPGRADE_PACKAGES', 'False')
 if UPGRADE_PACKAGES.lower() == 'true':
     packages = [dist.project_name for dist in working_set]
     scall("uv pip install --system " + ' '.join(packages), shell=True)
 
 UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
 if len(UPSTREAM_REPO) == 0:
-    UPSTREAM_REPO = "https://github.com/Tamilupdates/KPSML-X"
+    UPSTREAM_REPO = "https://github.com/obscure-n8/ZxZone-Master-MLTB"
 
 UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
 if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = 'kpsmlx'
+    UPSTREAM_BRANCH = 'main'
+
+DYNO = environ.get('DYNO', None)
 
 if UPSTREAM_REPO is not None:
-    if ospath.exists('.git'):
-        srun(["rm", "-rf", ".git"])
+    try:
+        if ospath.exists('.git'):
+            srun(["rm", "-rf", ".git"])
 
-    update = srun([f"git init -q \
-                     && git config --global user.email kpstorrent@gmail.com \
-                     && git config --global user.name kpsbots \
-                     && git add . \
-                     && git commit -sm update -q \
-                     && git remote add origin {UPSTREAM_REPO} \
-                     && git fetch origin -q \
-                     && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
+        log_info(f"Cloning from {UPSTREAM_REPO} branch {UPSTREAM_BRANCH}")
 
-    repo = UPSTREAM_REPO.split('/')
-    UPSTREAM_REPO = f"https://github.com/{repo[-2]}/{repo[-1]}"
-    if update.returncode == 0:
-        log_info('Successfully updated with latest commits !!')
-    else:
-        log_error('Something went Wrong ! Retry or Ask Support !')
-    log_info(f'UPSTREAM_REPO: {UPSTREAM_REPO} | UPSTREAM_BRANCH: {UPSTREAM_BRANCH}')
+        update = srun([f"git init -q \
+                         && git config --global user.email kpstorrent@gmail.com \
+                         && git config --global user.name kpsbots \
+                         && git add . \
+                         && git commit -sm update -q \
+                         && git remote add origin {UPSTREAM_REPO} \
+                         && git fetch origin -q \
+                         && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
+
+        repo = UPSTREAM_REPO.split('/')
+        UPSTREAM_REPO = f"https://github.com/{repo[-2]}/{repo[-1]}"
+
+        if update.returncode == 0:
+            log_info('Successfully updated with latest commits !!')
+        else:
+            log_error('Something went Wrong ! Retry or Ask Support !')
+
+        log_info(f'UPSTREAM_REPO: {UPSTREAM_REPO} | UPSTREAM_BRANCH: {UPSTREAM_BRANCH}')
+
+    except Exception as e:
+        log_error(f"Update failed: {e}")
+        if DYNO is not None:
+            log_error("Heroku deploy failed! Check your repo link and branch name.")
+            sys.exit(1)
