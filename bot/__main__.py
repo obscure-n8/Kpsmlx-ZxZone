@@ -44,7 +44,7 @@ async def start(client, message):
     buttons.ubutton(BotTheme('ST_BN1_NAME'), BotTheme('ST_BN1_URL'))
     buttons.ubutton(BotTheme('ST_BN2_NAME'), BotTheme('ST_BN2_URL'))
     reply_markup = buttons.build_menu(2)
-    if len(message.command) > 1 and message.command[1] == "kpsmlx":
+    if len(message.command) > 1 and message.command[1] == "zxzone":
         await deleteMessage(message)
     elif len(message.command) > 1 and config_dict['TOKEN_TIMEOUT']:
         userid = message.from_user.id
@@ -101,7 +101,6 @@ async def login(_, message):
         await sendMessage(message, BotTheme('LOGIN_USED'))
 
 
-
 async def restart(client, message):
     restart_message = await sendMessage(message, BotTheme('RESTARTING'))
     if scheduler.running:
@@ -128,8 +127,8 @@ async def ping(_, message):
 
 async def log(_, message):
     buttons = ButtonMaker()
-    buttons.ibutton(BotTheme('LOG_DISPLAY_BT'), f'kpsmlx {message.from_user.id} logdisplay')
-    buttons.ibutton(BotTheme('WEB_PASTE_BT'), f'kpsmlx {message.from_user.id} webpaste')
+    buttons.ibutton(BotTheme('LOG_DISPLAY_BT'), f'zxzone {message.from_user.id} logdisplay')
+    buttons.ibutton(BotTheme('WEB_PASTE_BT'), f'zxzone {message.from_user.id} webpaste')
     await sendFile(message, 'log.txt', buttons=buttons.build_menu(1))
 
 
@@ -163,11 +162,11 @@ async def search_images():
 async def bot_help(client, message):
     buttons = ButtonMaker()
     user_id = message.from_user.id
-    buttons.ibutton(BotTheme('BASIC_BT'), f'kpsmlx {user_id} guide basic')
-    buttons.ibutton(BotTheme('USER_BT'), f'kpsmlx {user_id} guide users')
-    buttons.ibutton(BotTheme('MICS_BT'), f'kpsmlx {user_id} guide miscs')
-    buttons.ibutton(BotTheme('O_S_BT'), f'kpsmlx {user_id} guide admin')
-    buttons.ibutton(BotTheme('CLOSE_BT'), f'kpsmlx {user_id} close')
+    buttons.ibutton(BotTheme('BASIC_BT'), f'zxzone {user_id} guide basic')
+    buttons.ibutton(BotTheme('USER_BT'), f'zxzone {user_id} guide users')
+    buttons.ibutton(BotTheme('MICS_BT'), f'zxzone {user_id} guide miscs')
+    buttons.ibutton(BotTheme('O_S_BT'), f'zxzone {user_id} guide admin')
+    buttons.ibutton(BotTheme('CLOSE_BT'), f'zxzone {user_id} close')
     await sendMessage(message, BotTheme('HELP_HEADER'), buttons.build_menu(2))
 
 
@@ -262,9 +261,9 @@ async def main():
         BotCommands.HelpCommand) & CustomFilters.authorized & ~CustomFilters.blacklisted))
     bot.add_handler(MessageHandler(stats, filters=command(
         BotCommands.StatsCommand) & CustomFilters.authorized & ~CustomFilters.blacklisted))
-    LOGGER.info(f"KPSML-X Bot [@{bot_name}] Started!")
+    LOGGER.info(f"ZxZone-Master-MLTB Bot [@{bot_name}] Started!")
     if user:
-        LOGGER.info(f"KPSML-X User [@{user.me.username}] Ready!")
+        LOGGER.info(f"ZxZone-Master-MLTB User [@{user.me.username}] Ready!")
     signal(SIGINT, exit_clean_up)
 
 async def stop_signals():
