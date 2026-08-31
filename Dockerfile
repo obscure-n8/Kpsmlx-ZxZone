@@ -4,7 +4,7 @@ FROM heroku/heroku:${STACK_VERSION}-build
 
 # Fix permission issue for Heroku
 USER root
-RUN mkdir -p /var/lib/apt/lists/partial
+RUN mkdir -p /var/lib/apt/lists/partial && chmod 755 /var/lib/apt/lists
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.11 \
@@ -33,5 +33,5 @@ RUN chown -R heroku:heroku /app || true
 
 # Add build timestamp to force new build
 RUN echo "Build timestamp: $(date)" >> /app/build_info.txt
-RUN echo "Force rebuild: $(date)" >> /app/rebuild.txt
+
 CMD ["bash", "start.sh"]
