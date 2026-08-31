@@ -1,4 +1,4 @@
-name: Deploy Kpsmlx Bot to Heroku 
+name: Deploy ZxZone-Master-MLTB to Heroku
 
 on:
   workflow_dispatch:
@@ -15,6 +15,10 @@ on:
       HEROKU_TEAM_NAME:
         description: "Heroku Team Name (Optional)"
         required: false
+      HEROKU_STACK:
+        description: "Heroku Stack (24 or 26)"
+        required: true
+        default: "24"
       BOT_TOKEN:
         description: "Telegram bot token"
         required: true
@@ -33,8 +37,12 @@ on:
       UPSTREAM_REPO:
         description: "Upstream Repo Link"
         required: true
-        default: "https://github.com/obscure-n8/Kpsmlx-ZxZone"
-      
+        default: "https://github.com/obscure-n8/ZxZone-Master-MLTB"
+      UPSTREAM_BRANCH:
+        description: "Upstream Branch"
+        required: true
+        default: "main"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -42,9 +50,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Set Stack Version
+        run: |
+          echo "STACK_VERSION=${{ inputs.HEROKU_STACK }}" >> $GITHUB_ENV
+
       - name: Install Heroku CLI
         run: |
-          curl https://heroku.com | sh
+          curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Deploy Repo to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
@@ -58,9 +70,11 @@ jobs:
           stack: "container"
           region: "us"
         env:
+          HD_STACK_VERSION: ${{ inputs.HEROKU_STACK }}
           HD_OWNER_ID: ${{ inputs.OWNER_ID }}
           HD_TELEGRAM_API: ${{ inputs.TELEGRAM_API }}
           HD_TELEGRAM_HASH: ${{ inputs.TELEGRAM_HASH }}
           HD_DATABASE_URL: ${{ inputs.DATABASE_URL }}
           HD_BOT_TOKEN: ${{ inputs.BOT_TOKEN }}
           HD_UPSTREAM_REPO: ${{ inputs.UPSTREAM_REPO }}
+          HD_UPSTREAM_BRANCH: ${{ inputs.UPSTREAM_BRANCH }}
