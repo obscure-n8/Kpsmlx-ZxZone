@@ -28,7 +28,7 @@ pyroutils.MIN_CHANNEL_ID = -100999999999999
 
 botStartTime = time()
 
-basicConfig(format="[%(asctime)s] [%(levelname)s] - %(message)s", #  [%(filename)s:%(lineno)d]
+basicConfig(format="[%(asctime)s] [%(levelname)s] - %(message)s",
             datefmt="%d-%b-%y %I:%M:%S %p",
             handlers=[FileHandler('log.txt'), StreamHandler()],
             level=INFO)
@@ -57,7 +57,6 @@ queued_up = {}
 bot_cache = {}
 non_queued_dl = set()
 non_queued_up = set()
-
 
 try:
     if bool(environ.get('_____REMOVE_THIS_LINE_____')):
@@ -143,7 +142,7 @@ if len(TELEGRAM_HASH) == 0:
     
 TIMEZONE = environ.get('TIMEZONE', '')
 if len(TIMEZONE) == 0:
-    TIMEZONE = 'Asia/Kolkata'
+    TIMEZONE = 'Asia/Dhaka'
     
 def changetz(*args):
     return datetime.now(timezone(TIMEZONE)).timetuple()
@@ -168,9 +167,13 @@ if DEFAULT_UPLOAD != 'rc' and DEFAULT_UPLOAD != 'ddl':
 
 DOWNLOAD_DIR = environ.get('DOWNLOAD_DIR', '')
 if len(DOWNLOAD_DIR) == 0:
-    DOWNLOAD_DIR = '/usr/src/app/downloads/'
+    DOWNLOAD_DIR = '/app/downloads/'
 elif not DOWNLOAD_DIR.endswith("/"):
     DOWNLOAD_DIR = f'{DOWNLOAD_DIR}/'
+
+# Heroku support
+if environ.get('DYNO'):
+    DOWNLOAD_DIR = '/app/downloads/'
 
 AUTHORIZED_CHATS = environ.get('AUTHORIZED_CHATS', '')
 if AUTHORIZED_CHATS:
@@ -219,13 +222,6 @@ def wztgClient(*args, **kwargs):
     if 'max_concurrent_transmissions' in signature(tgClient.__init__).parameters:
         kwargs['max_concurrent_transmissions'] = 1000
     return tgClient(*args, **kwargs)
-
-# --- Add this block to ensure an event loop exists ---
-# try:
-#     loop = get_event_loop()
-# except RuntimeError:
-#     loop = new_event_loop()
-#     set_event_loop(loop)
 
 IS_PREMIUM_USER = False
 user = ''
@@ -420,13 +416,17 @@ if len(BASE_URL) == 0:
     log_warning('BASE_URL not provided!')
     BASE_URL = ''
 
+# Heroku auto BASE_URL
+if environ.get('DYNO') and environ.get('HEROKU_APP_NAME'):
+    BASE_URL = f"https://{environ.get('HEROKU_APP_NAME')}.herokuapp.com"
+
 UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
 if len(UPSTREAM_REPO) == 0:
-    UPSTREAM_REPO = 'https://github.com/Tamilupdates/KPSML-X'
+    UPSTREAM_REPO = 'https://github.com/obscure-n8/ZxZone-Master-MLTB'
 
 UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
 if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = 'kpsmlx'
+    UPSTREAM_BRANCH = 'main'
     
 UPGRADE_PACKAGES = environ.get('UPGRADE_PACKAGES', '')
 UPGRADE_PACKAGES = UPGRADE_PACKAGES.lower() == 'true'
@@ -523,15 +523,15 @@ IMG_PAGE = int(IMG_PAGE) if IMG_PAGE.isdigit() else ''
 
 AUTHOR_NAME = environ.get('AUTHOR_NAME', '')
 if len(AUTHOR_NAME) == 0:
-    AUTHOR_NAME = 'KPS Bots'
+    AUTHOR_NAME = 'obscure-n8'
 
 AUTHOR_URL = environ.get('AUTHOR_URL', '')
 if len(AUTHOR_URL) == 0:
-    AUTHOR_URL = 'https://telegram.me/KPSBots'
+    AUTHOR_URL = 'https://github.com/obscure-n8'
 
 TITLE_NAME = environ.get('TITLE_NAME', '')
 if len(TITLE_NAME) == 0:
-    TITLE_NAME = 'KPSML-X Leech Bot'
+    TITLE_NAME = 'ZxZone-Master-MLTB'
     
 COVER_IMAGE = environ.get('COVER_IMAGE', '')
 if len(COVER_IMAGE) == 0:
@@ -539,7 +539,7 @@ if len(COVER_IMAGE) == 0:
 
 GD_INFO = environ.get('GD_INFO', '')
 if len(GD_INFO) == 0:
-    GD_INFO = 'Uploaded by KPSML-X Leech Bot'
+    GD_INFO = 'Uploaded by ZxZone-Master-MLTB'
 
 SAVE_MSG = environ.get('SAVE_MSG', '')
 SAVE_MSG = SAVE_MSG.lower() == 'true'
@@ -785,7 +785,7 @@ with open("a2c.conf", "a+") as a:
     if TORRENT_TIMEOUT:
         a.write(f"bt-stop-timeout={TORRENT_TIMEOUT}\n")
     a.write(f"bt-tracker=[{trackers}]")
-srun([bot_cache['pkgs'][0], "--conf-path=/usr/src/app/a2c.conf"])
+srun([bot_cache['pkgs'][0], "--conf-path=/app/a2c.conf"])
 alive = Popen(["python3", "alive.py"])
 sleep(0.5)
 if ospath.exists('accounts.zip'):
@@ -799,7 +799,6 @@ if not ospath.exists('accounts'):
 sleep(0.5)
 
 aria2 = ariaAPI(ariaClient(host="http://localhost", port=6800, secret=""))
-
 
 def get_client():
     return qbClient(
@@ -816,7 +815,6 @@ def get_client():
                 },
     )
 
-
 def aria2c_init():
     try:
         log_info("Initializing Aria2c")
@@ -829,7 +827,6 @@ def aria2c_init():
         aria2.remove(downloads, force=True, files=True, clean=True)
     except Exception as e:
         log_error(f"Aria2c initializing error: {e}")
-
 
 Thread(target=aria2c_init).start()
 sleep(1.5)
