@@ -3,12 +3,18 @@ from time import sleep
 from qbittorrentapi import NotFound404Error, Client as qbClient
 from aria2p import API as ariaAPI, Client as ariaClient
 from flask import Flask, request
+from os import environ
+import socket
 
 from web.nodes import make_tree
 
 app = Flask(__name__)
 
-aria2 = ariaAPI(ariaClient(host="http://localhost", port=6800, secret=""))
+# Heroku port support
+PORT = environ.get('PORT', 8080)
+
+# Aria2 client
+aria2 = ariaAPI(ariaClient(host="localhost", port=6800, secret=""))
 
 basicConfig(format="[%(asctime)s] [%(levelname)s] - %(message)s",
             datefmt="%d-%b-%y %I:%M:%S %p",
@@ -143,8 +149,8 @@ span{
 
 span.active{
     transform: rotate(90deg);
-    -ms-transform: rotate(90deg); /* for IE  */
-    -webkit-transform: rotate(90deg);/* for browsers supporting webkit (such as chrome, firefox, safari etc.). */
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
     display: inline-block;
 }
 
@@ -221,20 +227,19 @@ function s_validate() {
 </script>
 </head>
 <body>
-  <!--© Designed and coded by @KPSBots-Telegram-->
     <header>
       <div class="brand">
         <img
           src="https://graph.org/file/1a6ad157f55bc42b548df.png"
           alt="logo"
         />
-        <a href="https://telegram.me/KPSBots">
-          <h2 class="name">Bittorrent Selection</h2>
+        <a href="#">
+          <h2 class="name">ZxZone File Selector</h2>
         </a>
       </div>
       <div class="social">
-        <a href="https://github.com/Tamilupdates/KPSML-X"><i class="fab fa-github"></i></a>
-        <a href="https://telegram.me/KPSBots"><i class="fab fa-telegram"></i></a>
+        <a href="https://github.com/obscure-n8/ZxZone-Master-MLTB"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
       </div>
     </header>
     <div id="sticks">
@@ -273,7 +278,6 @@ function s_validate() {
 
       if(document.getElementsByTagName("ul").length >= 10){
         var labels = document.querySelectorAll("label");
-        //Shorting the file/folder names
         labels.forEach(function (label) {
             if (label.innerText.toString().split(" ").length >= 9) {
                 let FirstPart = label.innerText
@@ -310,11 +314,7 @@ $('input[type="checkbox"]').change(function(e) {
   var checked = $(this).prop("checked"),
       container = $(this).parent(),
       siblings = container.siblings();
-/*
-  $(this).attr('value', function(index, attr){
-     return attr == 'yes' ? 'noo' : 'yes';
-  });
-*/
+
   container.find('input[type="checkbox"]').prop({
     indeterminate: false,
     checked: checked
@@ -613,20 +613,19 @@ section span{
     </style>
   </head>
 <body>
-   <!--© Designed and coded by @KPSBots-Telegram-->
     <header>
       <div class="brand">
         <img
           src="https://graph.org/file/1a6ad157f55bc42b548df.png"
           alt="logo"
         />
-        <a href="https://telegram.me/KPSBots">
-          <h2 class="name">Bittorrent Selection</h2>
+        <a href="#">
+          <h2 class="name">ZxZone File Selector</h2>
         </a>
       </div>
       <div class="social">
-        <a href="https://github.com/Tamilupdates/KPSML-X"><i class="fab fa-github"></i></a>
-        <a href="https://telegram.me/KPSBots"><i class="fab fa-telegram"></i></a>
+        <a href="https://github.com/obscure-n8/ZxZone-Master-MLTB"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
       </div>
     </header>
     <section>
@@ -831,16 +830,16 @@ def homepage():
 </head>
 <body>
     <div class="header">
-        <h1>KPSML-X</h1>
+        <h1>ZxZone-Master-MLTB</h1>
     </div>
     <div class="content">
         <img src="https://graph.org/file/0ff9d5e94a070fe4154c0.jpg" class="image">
-        <a href="https://telegram.me/KPSBots" style="text-decoration: none;">
-            <button class="button">Join Updates Channel Now</button>
+        <a href="#" style="text-decoration: none;">
+            <button class="button">ZxZone Bot</button>
         </a>
     </div>
     <div class="footer">
-&copy; <script>document.write(new Date().getFullYear() + '-' + String(new Date().getFullYear() + 1).slice(-2));</script> KPSML-X. All Rights Reserved.
+&copy; <script>document.write(new Date().getFullYear() + '-' + String(new Date().getFullYear() + 1).slice(-2));</script> ZxZone-Master-MLTB. All Rights Reserved.
     </div>
 </body>
 </html>
@@ -853,4 +852,4 @@ def page_not_found(e):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=PORT, debug=False)
