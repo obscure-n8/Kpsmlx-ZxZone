@@ -26,4 +26,4 @@ COPY . .
 
 RUN chown -R heroku:heroku /app || true
 
-CMD ["python3", "update.py"]
+CMD ["bash", "start.sh"]
