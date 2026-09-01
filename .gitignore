@@ -1,4 +1,3 @@
-# Python
 *.pyc
 __pycache__/
 *.pyo
@@ -11,33 +10,21 @@ dist/
 build/
 *.whl
 
-# Environment
-config.env
-.env
-*.env
-*.env.*
 .netrc
 
-# Database
-*.db
-*.sqlite3
-*.pickle
 log.txt
 rlog.txt
 
-# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
 .DS_Store
 Thumbs.db
 Desktop.ini
 
-# Bot specific
 data*
 accounts/
 Thumbnails/
@@ -52,31 +39,11 @@ terabox.txt
 rclone.conf
 list_drives.txt
 
-# Git
-.git/
-.gitignore
-*.gitattributes
-
-# Heroku
-.heroku/
-.heroku.yml
-
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Temporary files
 *.tmp
 *.temp
-*.swp
-*.swo
-*~
-.DS_Store
