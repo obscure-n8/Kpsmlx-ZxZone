@@ -6,7 +6,6 @@ services:
     command: bash start.sh
     restart: unless-stopped
     ports:
-      - "80:80"
       - "8080:8080"
     environment:
       - TZ=Asia/Dhaka
