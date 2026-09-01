@@ -1,26 +1,26 @@
-from time import sleep
-from requests import get as rget
-from os import environ
+import os
+import time
+import requests
 from logging import error as logerror
 
-PORT = environ.get('PORT', None)
-DYNO = environ.get('DYNO', None)
-HEROKU_APP_NAME = environ.get('HEROKU_APP_NAME', None)
+HEROKU_APP_NAME = os.environ.get('HEROKU_APP_NAME', None)
+PORT = os.environ.get('PORT', None)
 
 BASE_URL = None
-
-if DYNO is not None and HEROKU_APP_NAME is not None:
+if HEROKU_APP_NAME:
     BASE_URL = f"https://{HEROKU_APP_NAME}.herokuapp.com"
+elif PORT:
+    BASE_URL = f"http://localhost:{PORT}"
 
-if DYNO is not None and BASE_URL is not None:
+if BASE_URL:
     while True:
         try:
-            response = rget(BASE_URL, timeout=10)
-            if response.status_code == 200:
-                sleep(600)
+            response = requests.get(BASE_URL, timeout=15)
+            if response.status_code in:
+                time.sleep(900)
             else:
-                sleep(30)
+                time.sleep(120)
         except Exception as e:
-            logerror(f"Keep-alive error: {e}")
-            sleep(60)
+            logerror(f"Keep-alive network cycle bypass: {e}")
+            time.sleep(300)
             continue
