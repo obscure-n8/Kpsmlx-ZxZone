@@ -57,10 +57,14 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
 
-      - name: Deploy to Heroku (Git Push)
+      - name: Login to Heroku Container Registry
         run: |
-          heroku git:remote -a ${{ inputs.HEROKU_APP_NAME }}
-          git push heroku main --force
+          echo ${{ inputs.HEROKU_API_KEY }} | docker login --username=${{ inputs.HEROKU_EMAIL }} --password-stdin registry.heroku.com
+
+      - name: Build and Push Docker Image to Heroku
+        run: |
+          heroku container:push web -a ${{ inputs.HEROKU_APP_NAME }}
+          heroku container:release web -a ${{ inputs.HEROKU_APP_NAME }}
         env:
           HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
 
