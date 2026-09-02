@@ -1,49 +1,37 @@
-*.pyc
+# Python
 __pycache__/
+*.pyc
 *.pyo
 *.pyd
-.Python
 *.so
-*.egg
 *.egg-info/
 dist/
 build/
-*.whl
+.eggs/
 
-.netrc
+# Virtualenv
+.env
+.venv/
+env/
+venv/
 
-log.txt
-rlog.txt
+# Logs
+*.log
+logs/
+*.out
+*.err
 
+# IDE / Editor
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
+# OS files
 .DS_Store
 Thumbs.db
-Desktop.ini
 
-data*
-accounts/
-Thumbnails/
-MediaInfo/
-Images/
-rclone/
-downloads/
-cookies.txt
-bot.session
-user.session
-terabox.txt
-rclone.conf
-list_drives.txt
-
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-*.tmp
-*.temp
+# Configs
+config.json
+config.yaml
+secret.json
