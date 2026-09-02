@@ -34,7 +34,7 @@ on:
       UPSTREAM_REPO:
         description: "Upstream Repo Link"
         required: true
-        default: "https://github.com/obscure-n8/ZxZone-Master-MLTB"
+        default: "https://github.com"
       UPSTREAM_BRANCH:
         description: "Upstream Branch"
         required: true
@@ -51,15 +51,15 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
-      - name: Set Container Stack
-        run: |
-          heroku stack:set container -a ${{ inputs.HEROKU_APP_NAME }} --force
-        env:
-          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
-
       - name: Login to Heroku Container Registry
         run: |
-          echo ${{ inputs.HEROKU_API_KEY }} | docker login --username=${{ inputs.HEROKU_EMAIL }} --password-stdin registry.heroku.com
+          echo ${{ inputs.HEROKU_API_KEY }} | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Set Container Stack
+        run: |
+          heroku stack:set container -a ${{ inputs.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
 
       - name: Build and Push Docker Image to Heroku
         run: |
