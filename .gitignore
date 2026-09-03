@@ -35,3 +35,8 @@ Thumbs.db
 config.json
 config.yaml
 secret.json
+
+config.env
+
+*.env
+!config_sample.env
